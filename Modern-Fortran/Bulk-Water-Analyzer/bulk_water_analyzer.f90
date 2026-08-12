@@ -8,7 +8,7 @@ module mod_geometry
     use mod_constants
     implicit none
 contains
-    ! üŠú‹«ŠEğŒ‚ğl—¶‚µ‚½‹——£ŒvZ
+    ! å‘¨æœŸå¢ƒç•Œæ¡ä»¶ã‚’è€ƒæ…®ã—ãŸè·é›¢è¨ˆç®—
     subroutine get_dist_pbc(p1, p2, cell, dist, diff_vec)
         real(dp), intent(in) :: p1(3), p2(3), cell(3)
         real(dp), intent(out) :: dist
@@ -20,7 +20,7 @@ contains
         if (present(diff_vec)) diff_vec = d
     end subroutine
 
-    ! 3“_ŠÔ‚ÌŠp“x (BAC) ‚ğŒvZ
+    ! 3ç‚¹é–“ã®è§’åº¦ (BAC) ã‚’è¨ˆç®—
     subroutine get_angle_3pt(pa, pb, pc, cell, angle_rad)
         real(dp), intent(in) :: pa(3), pb(3), pc(3), cell(3)
         real(dp), intent(out) :: angle_rad
@@ -41,7 +41,7 @@ program water_system_analyzer
     use mod_geometry
     implicit none
 
-    ! --- •Ï”éŒ¾ ---
+    ! --- å¤‰æ•°å®£è¨€ ---
     integer :: n_total, n_comp, t_init, t_last, step_n, t, i, j, k, s, step_count
     integer :: n_o, n_h, i_h, i_o, j_o, fst, snd, num, Onum1, Onum2, cat
     real(dp) :: dr_val, d1, d2, h_ang, datoms, OHdist1, OHdist2, OO, r_threshold
@@ -51,16 +51,16 @@ program water_system_analyzer
     character(4), allocatable :: atom_names(:)
     real(dp), allocatable :: coords(:,:,:), cell_data(:,:)
     
-    ! ‰ğÍ—p”z—ñ
+    ! è§£æç”¨é…åˆ—
     real(dp), allocatable :: avg_d5_dist(:)
     real(dp) :: hb_coord_distri(0:6)
     integer, allocatable :: current_hb_count(:)
     
-    ! “Œv—p”z—ñ [Category: 1=HB, 2=Dangling] [Param: 1:z, 2:OHdist, 3:OHangle, 4:O_Hdist, 5:Hangle, 6:HOH]
+    ! çµ±è¨ˆç”¨é…åˆ— [Category: 1=HB, 2=Dangling] [Param: 1:z, 2:OHdist, 3:OHangle, 4:O_Hdist, 5:Hangle, 6:HOH]
     integer :: s_cnt(2)
     real(dp) :: s_sum(2, 6), s_sq(2, 6), vals(6)
 
-    ! --- ƒf[ƒ^“ü—Í ---
+    ! --- ãƒ‡ãƒ¼ã‚¿å…¥åŠ› ---
     open(11, file='file07.dat', status='old')
     read(11, '(/I7, I3)') n_total, n_comp
     allocate(atom_names(n_comp), n_ion_type(n_comp), ions(2, n_comp))
@@ -90,7 +90,7 @@ program water_system_analyzer
     end do
     close(12)
 
-    ! --- ‰Šú‰» ---
+    ! --- åˆæœŸåŒ– ---
     allocate(avg_d5_dist(ions(1,1):ions(2,1))); avg_d5_dist = 0.0_dp
     allocate(current_hb_count(ions(1,1):ions(2,1)))
     hb_coord_distri = 0.0_dp
@@ -105,14 +105,14 @@ program water_system_analyzer
     write(21, '(A4, 6A12)') "Hnum","averageZ","HOdist","HOangle","OHdist","OHangle","HOHangle"
     write(22, '(A4, 6A12)') "Hnum","averageZ","HOdist","HOangle","OHdist","OHangle","HOHangle"
 
-    ! --- ƒƒCƒ“‰ğÍƒ‹[ƒv1: HŒ´qƒx[ƒX (HB/Dangling”»’è) ---
+    ! --- ãƒ¡ã‚¤ãƒ³è§£æãƒ«ãƒ¼ãƒ—1: HåŸå­ãƒ™ãƒ¼ã‚¹ (HB/Danglingåˆ¤å®š) ---
     print *, "Analyzing H-atoms (HB vs Dangling)..."
     do i_h = ions(1, 2), ions(2, 2)
         num = 0
         h_angle_avg = 0.0_dp
         OHdist1 = 0.0_dp; OHdist2 = 0.0_dp
         
-        ! ƒXƒeƒbƒvƒ‹[ƒvFÅ‹ßÚ_‘f‚Ì“Á’è‚ÆŠô‰½ğŒ‚ÌWŒv
+        ! ã‚¹ãƒ†ãƒƒãƒ—ãƒ«ãƒ¼ãƒ—ï¼šæœ€è¿‘æ¥é…¸ç´ ã®ç‰¹å®šã¨å¹¾ä½•æ¡ä»¶ã®é›†è¨ˆ
         do t = t_init, t_last
             d1 = 100.0_dp; d2 = 200.0_dp
             do i_o = ions(1, 1), ions(2, 1)
@@ -129,9 +129,9 @@ program water_system_analyzer
             OHdist2 = OHdist2 + d2
             if (d2 < 2.5_dp) num = num + 1
             
-            ! ÚO-H...O Šp“x‚ÌÏZ
+            ! âˆ O-H...O è§’åº¦ã®ç©ç®—
             call get_dist_pbc(coords(:,fst,t), coords(:,snd,t), cell_data(:,t), OO)
-            ! —]Œ·’è— (³‚µ‚¢Š‡ŒÊˆÊ’u)
+            ! ä½™å¼¦å®šç† (æ­£ã—ã„æ‹¬å¼§ä½ç½®)
             h_ang = acos(max(-1.0_dp, min(1.0_dp, (d1**2 + d2**2 - OO**2)/(2.0_dp*d1*d2))))
             h_angle_avg = h_angle_avg + (PI - h_ang)
         end do
@@ -140,14 +140,14 @@ program water_system_analyzer
         OHdist1 = OHdist1 / real(step_count, dp)
         OHdist2 = OHdist2 / real(step_count, dp)
 
-        ! ”»’è (numŠ„‡ >= 0.9 ‚©‚Â Šp“x < 35“x)
+        ! åˆ¤å®š (numå‰²åˆ >= 0.9 ã‹ã¤ è§’åº¦ < 35åº¦)
         if ((real(num,dp)/real(step_count,dp) >= 0.9_dp) .and. (h_angle_avg < (35.0_dp*PI/180.0_dp))) then
             cat = 1 ! HB
         else
             cat = 2 ! Dangling
         end if
 
-        ! ZÀ•W•½‹Ï‚ÆOHŠp“x•½‹Ï‚ÌŒvZ
+        ! Zåº§æ¨™å¹³å‡ã¨OHè§’åº¦å¹³å‡ã®è¨ˆç®—
         cur_z = 0.0_dp; cur_ang = 0.0_dp
         do t = t_init, t_last
             cur_z = cur_z + coords(3, i_h, t)
@@ -165,11 +165,11 @@ program water_system_analyzer
         cur_z = cur_z / real(step_count, dp)
         cur_ang = (cur_ang / real(step_count, dp)) * 180.0_dp / PI
         
-        ! …•ªq©‘Ì‚ÌHOHŠp“x (Onum1‚ğ_‘f‚Æ‚·‚é)
+        ! æ°´åˆ†å­è‡ªä½“ã®HOHè§’åº¦ (Onum1ã‚’é…¸ç´ ã¨ã™ã‚‹)
         hoh_angle = 0.0_dp
         block
             integer :: o_fst, o_snd
-            ! _‘fOnum1‚ÉŒ‹‡‚µ‚Ä‚¢‚é2‚Â‚Ì…‘f‚ğ’T‚· (ŠÈˆÕ“I‚ÉÅ‹ßÚ2‚Â)
+            ! é…¸ç´ Onum1ã«çµåˆã—ã¦ã„ã‚‹2ã¤ã®æ°´ç´ ã‚’æ¢ã™ (ç°¡æ˜“çš„ã«æœ€è¿‘æ¥2ã¤)
             d1 = 100.0_dp; d2 = 200.0_dp
             do j = ions(1,2), ions(2,2)
                 call get_dist_pbc(coords(:,Onum1,t_last), coords(:,j,t_last), cell_data(:,t_last), datoms)
@@ -184,21 +184,21 @@ program water_system_analyzer
             hoh_angle = hoh_angle * 180.0_dp / PI
         end block
 
-        ! Œ‹‰Ê‚Ì‘‚«o‚µ
+        ! çµæœã®æ›¸ãå‡ºã—
         if (cat == 1) then
             write(21, '(I4, X, 10F12.7)') i_h, cur_z, OHdist1, cur_ang, OHdist2, h_angle_avg*180.0_dp/PI, hoh_angle
         else
             write(22, '(I4, X, 10F12.7)') i_h, cur_z, OHdist1, cur_ang, OHdist2, h_angle_avg*180.0_dp/PI, hoh_angle
         end if
 
-        ! “ŒvÏZ
+        ! çµ±è¨ˆç©ç®—
         vals = [cur_z, OHdist1, cur_ang, OHdist2, h_angle_avg*180.0_dp/PI, hoh_angle]
         s_cnt(cat) = s_cnt(cat) + 1
         s_sum(cat, :) = s_sum(cat, :) + vals
         s_sq(cat, :) = s_sq(cat, :) + vals**2
     end do
 
-    ! --- “Œvo—Í ---
+    ! --- çµ±è¨ˆå‡ºåŠ› ---
     do cat = 1, 2
         write(25, '(I8)', advance='no') s_cnt(cat)
         do j = 1, 6
@@ -215,11 +215,11 @@ program water_system_analyzer
         write(25, *)
     end do
 
-    ! --- ƒƒCƒ“‰ğÍƒ‹[ƒv2: OŒ´qƒx[ƒX (d5 / HB coordination) ---
+    ! --- ãƒ¡ã‚¤ãƒ³è§£æãƒ«ãƒ¼ãƒ—2: OåŸå­ãƒ™ãƒ¼ã‚¹ (d5 / HB coordination) ---
     print *, "Analyzing Oxygen-base properties (d5, HB-coordination)..."
     do t = t_init, t_last
         current_hb_count = 0
-        ! d5ŒvZ
+        ! d5è¨ˆç®—
         do i_o = ions(1,1), ions(2,1)
             block
                 real(dp) :: dists(5), t_d
@@ -240,7 +240,7 @@ program water_system_analyzer
                 avg_d5_dist(i_o) = avg_d5_dist(i_o) + dists(5)
             end block
         end do
-        ! _‘fü‚è‚ÌHB–{”ƒJƒEƒ“ƒg
+        ! é…¸ç´ å‘¨ã‚Šã®HBæœ¬æ•°ã‚«ã‚¦ãƒ³ãƒˆ
         do i_h = ions(1,2), ions(2,2)
             d1 = 999.9_dp; d2 = 999.9_dp
             do i_o = ions(1,1), ions(2,1)
@@ -263,7 +263,7 @@ program water_system_analyzer
         end do
     end do
 
-    ! --- ÅIo—Í ---
+    ! --- æœ€çµ‚å‡ºåŠ› ---
     write(23, '(A5, 4X, A7)') "r (A)", "d5_rate"
     do s = 0, 300
         r_threshold = 2.0_dp + real(s, dp) * 0.01_dp
